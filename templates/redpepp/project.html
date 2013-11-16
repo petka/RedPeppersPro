@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block additional_head %}
+
+{% endblock %}
+
+{% block content %}
+<div id="project" class="page">
+	<div class="left-column">
+	    <div class="title">
+	       <h1>{{ project.title }}</h1>
+		   <div class="date-created">{{ project.created|date:"d.m.Y" }}</div>
+		   <div class="clear"></div>
+		</div>
+		<div class="caption">{{ project.caption }}</div>
+		<div class="about">{{ project.text }}</div>
+	    <div class="link"><a href="{{ project.url }}">{{ project.url }}</a></div>
+	    {% for project_image in project.images.all %}
+            {% thumbnail project_image.image "600x480" as im %}
+                <div>
+	                <a href="#"><img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" /></a>
+	                <div>{{ project_image.description }}</div>
+                </div>
+            {% empty %}
+            {% endthumbnail %} 	    
+	    {% endfor %}
+	</div>
+	<div class="right-column">
+	   <div class="client"><span class="title">Клиенты:</span> {{ project.client.title }}</div>
+	   <div>
+	       {% thumbnail project.client.image "120x60" as im %}<a href="{{ project.url }}"><img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" /></a>{% empty %}{% endthumbnail %}
+	   </div>
+       
+       Над проектом работали:
+        <div>
+        {% for worker in project.workers.all %}
+            <div>{{ worker.name }}</div>
+        {% endfor %}
+        </div>
+	</div>
+	<div class="clear"></div>
+</div>
+{% endblock %}

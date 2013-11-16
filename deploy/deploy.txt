@@ -1,0 +1,6 @@
+Django
+south
+django-extensions
+psycopg2
+sorl-thumbnail
+PIL

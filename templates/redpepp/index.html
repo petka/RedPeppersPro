@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block additional_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/nivo/themes/default/default.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/nivo/nivo-slider.css" type="text/css" media="screen" />
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.nivo.slider.js"></script>
+<script type="text/javascript">
+	$(window).load(function() {
+	        $('#slider').nivoSlider({
+	        effect: 'fade', // Specify sets like: 'fold,fade,sliceDown'
+	        animSpeed: 500, // Slide transition speed
+	        pauseTime: 3000, // How long each slide will show
+	        startSlide: 0, // Set starting Slide (0 index)
+	        directionNav: true, // Next & Prev navigation
+	        controlNav: false, // 1,2,3... navigation
+	        controlNavThumbs: false, // Use thumbnails for Control Nav
+	        pauseOnHover: true, // Stop animation while hovering
+	        manualAdvance: false, // Force manual transitions
+	        prevText: '', // Prev directionNav text
+	        nextText: '', // Next directionNav text
+	        randomStart: false // Start on a random slide
+	    });
+	});
+	$(function(){
+	        $('.fast_order a.button').click(function(){
+	                $('.fast_order form').submit();
+	        });
+	});
+</script>
+{% endblock %}
+{% block content %}
+        <div id="fast_center">
+        <div class="portfolio">
+            <div class="title"></div>
+            {% if projects|length %}
+                <div class="slider-wrapper theme-default">
+                    <div id="slider" class="nivoSlider">
+                            {% for project in projects %}
+                                {% thumbnail project.get_first_image "328x188" as im %}<a href="{% url redpepp.project project.id %}"><img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" /></a>{% empty %}{% endthumbnail %}
+                            {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="screen noise"></div>
+            {% endif %}
+        </div>
+        <div class="fast_order">
+            <a name="order_form"></a>
+            {% if order_sended %}
+                <div class="message thankyou">Спасибо!<br/>Ваш заказ отправлен</div>
+            {% endif %}
+            {% comment %}
+                <div class="message please">Заполните<br/>обязательные поля!</div>
+            {% endcomment %}
+            <form action="/#order_form" method="post">
+				{% csrf_token %}
+                <table>
+                <tr><td colspan="2" class="caption">Быстрый заказ с сайта</td></tr>
+                {% for field in order_form %}
+                    <tr><td class="title">{{ field.label_tag }}</td><td {% if field.errors %} class="error"{% endif %}>{{ field }}</td></tr>
+                {% endfor %}
+                </table>
+                <a class="button">Отправить запрос</a>
+            </form>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div id="fast_news">
+        <div class="new first">
+                <div class="img"></div>
+            <div class="text">
+                <a href="/news/1/" class="date">25.04.2011</a><br/>
+                Ты шел по аэродрому, увидел горящий самолет, сел в него и полетел. Red Keds сделали игру для «айфона»...
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="new second">
+                <div class="img"></div>
+            <div class="text">
+                <a href="/news/2/" class="date">25.04.2011</a><br/>
+                Ты шел по аэродрому, увидел горящий самолет, сел в него и полетел. Red Keds сделали игру для «айфона»...
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="new third">
+                <div class="img"></div>
+            <div class="text">
+                <a href="/news/3/" class="date">25.04.2011</a><br/>
+                Ты шел по аэродрому, увидел горящий самолет, сел в него и полетел. Red Keds сделали игру для «айфона»...
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="detail"><a href="/news/archive/">Архив новостей</a></div>
+    </div>
+{% endblock %}
